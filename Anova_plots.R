@@ -1,10 +1,14 @@
+########################################
+# Line plots for Machado et al. (2021) #
+########################################
+
 # required packages
 
 library(plyr)
 library(ggplot2)
 library(ggpubr)
 
-# open file in long format
+# load file in long format
 
 df <- read.csv(file="Study Spreadsheet.csv")
 
