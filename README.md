@@ -1,4 +1,4 @@
-# Doctorate Analysis One
+# Data visualization with ggplot2
 
 Code used in Machado et al. (2021): https://doi.org/10.1038/s41598-021-03386-6.
 
