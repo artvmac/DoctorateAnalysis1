@@ -3,45 +3,36 @@
 ########################################
 
 # required packages
-
 library(plyr)
 library(ggplot2)
 library(ggpubr)
 
 # load file in long format
-
 df <- read.csv(file="Study Spreadsheet.csv")
 
-# see data structure
-
+# check data structure
 str(df)
 
-# see col names
-
+# check col indexes
 data.frame(colnames(df))
 
-# set categorical variables into factors
-
+# specify columns that will be turned into factors
 col <- c(11:13)
 
+# lapply function to transform selected columns into factors
 df[,col] <- lapply(df[,col],factor)
 
-str(df)
-
 # changing names of task levels
+levels(df$task)
 
-levels(df$task)[levels(df$task)=="rest"] <- "Rest"
-
-levels(df$task)[levels(df$task)=="prep"] <- "Reactivity"
-
-levels(df$task)[levels(df$task)=="recovery"] <- "Recovery"
+levels(df$task) <- c("Reactivity", "Recovery", "Rest")
 
 # reordering the levels of task
+df$task <- factor(df$task, levels = c("Rest", "Reactivity", "Recovery"))
 
-df$task <- factor(df$task, levels = c("Rest","Reactivity","Recovery"))
+levels(df$task)
 
 # summarize variables with ddply, interactions
-
 hr_sum <- ddply(df, c("task","dysf.factor"), summarise,
                 N = length(hr),
                 mean = mean(hr),
@@ -80,7 +71,6 @@ hf_sum <- ddply(df, c("task","dysf.factor"), summarise,
 # ggplot2 line graphs for interactions
 
 # heart rate and dysfunctional coping plot
-
 hr_graph <- ggplot(hr_sum, aes(x=task, y=mean, group = dysf.factor, 
                                linetype=dysf.factor))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8, 
@@ -97,7 +87,6 @@ hr_graph <- ggplot(hr_sum, aes(x=task, y=mean, group = dysf.factor,
                                                     b = 0, l = 0)))
 
 # sdnn and dysfunctional coping plot
-
 sdnn_graph <- ggplot(sdnn_sum, aes(x=task, y=mean, group = dysf.factor, 
                                    linetype=dysf.factor))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8, 
@@ -114,7 +103,6 @@ sdnn_graph <- ggplot(sdnn_sum, aes(x=task, y=mean, group = dysf.factor,
                                                     b = 0, l = 0)))
 
 # rmssd and dysfunctional coping plot
-
 rmssd_graph <- ggplot(rmssd_sum, aes(x=task, y=mean, group = dysf.factor, 
                                      linetype=dysf.factor))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8, 
@@ -131,7 +119,6 @@ rmssd_graph <- ggplot(rmssd_sum, aes(x=task, y=mean, group = dysf.factor,
                                                     b = 0, l = 0)))
 
 # low frequency and dysfunctional coping plot
-
 lf_graph <- ggplot(lf_sum, aes(x=task, y=mean, group = dysf.factor, 
                                linetype=dysf.factor))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8, 
@@ -149,7 +136,6 @@ lf_graph <- ggplot(lf_sum, aes(x=task, y=mean, group = dysf.factor,
                                                     b = 0, l = 0)))
 
 # high frequency and dysfunctional coping plot
-
 hf_graph <- ggplot(hf_sum, aes(x=task, y=mean, group = dysf.factor, 
                                linetype=dysf.factor))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8, 
@@ -163,7 +149,6 @@ hf_graph <- ggplot(hf_sum, aes(x=task, y=mean, group = dysf.factor,
                                                     b = 0, l = 0)))
 
 # arrange the 5 plots together
-
 multi_plot <- ggarrange(hr_graph,
                           ggarrange(sdnn_graph, rmssd_graph, 
                                     lf_graph, hf_graph, 
@@ -172,13 +157,11 @@ multi_plot <- ggarrange(hr_graph,
                           nrow = 2, labels = "A")
 
 # saving in high resolution
-
 tiff("multi_aov.tiff", units="in", width=7, height=8, res=300)
 multi_plot
 dev.off()
 
 # summarize variables with ddply, only for task
-
 hr_sum_task <- ddply(df, c("task"), summarise,
                 N = length(hr),
                 mean = mean(hr),
@@ -217,7 +200,6 @@ hf_sum_task <- ddply(df, c("task"), summarise,
 # ggplot2 line graphs for task
 
 # heart rate task plot
-
 hr_graph_task <- ggplot(hr_sum_task, aes(x=task, y=mean, group = 1))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8) +
   geom_line(size=0.8) +
@@ -232,7 +214,6 @@ hr_graph_task <- ggplot(hr_sum_task, aes(x=task, y=mean, group = 1))+
                                                     b = 0, l = 0)))
 
 # sdnn task plot
-
 sdnn_graph_task <- ggplot(sdnn_sum_task, aes(x=task, y=mean, group = 1))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8) +
   geom_line(size=0.8) +
@@ -247,7 +228,6 @@ sdnn_graph_task <- ggplot(sdnn_sum_task, aes(x=task, y=mean, group = 1))+
                                                     b = 0, l = 0)))
 
 # rmssd task plot
-
 rmssd_graph_task <- ggplot(rmssd_sum_task, aes(x=task, y=mean, group = 1))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8) +
   geom_line(size=0.8) +
@@ -262,7 +242,6 @@ rmssd_graph_task <- ggplot(rmssd_sum_task, aes(x=task, y=mean, group = 1))+
                                                     b = 0, l = 0)))
 
 # low frequency task plot
-
 lf_graph_task <- ggplot(lf_sum_task, aes(x=task, y=mean, group = 1))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8) +
   geom_line(size=0.8) +
@@ -278,7 +257,6 @@ lf_graph_task <- ggplot(lf_sum_task, aes(x=task, y=mean, group = 1))+
                                                     b = 0, l = 0)))
 
 # high frequency task plot
-
 hf_graph_task <- ggplot(hf_sum_task, aes(x=task, y=mean, group = 1))+
   geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, size=0.8) +
   geom_line(size=0.8) +
@@ -291,7 +269,6 @@ hf_graph_task <- ggplot(hf_sum_task, aes(x=task, y=mean, group = 1))+
 
 
 # arrange the 5 plots together, task only
-
 multi_plot_2 <- ggarrange(hr_graph_task,
                           ggarrange(sdnn_graph_task, rmssd_graph_task, 
                                     lf_graph_task, hf_graph_task, 
@@ -300,7 +277,6 @@ multi_plot_2 <- ggarrange(hr_graph_task,
                           nrow = 2, labels = "A")
 
 # saving in high resolution
-
 tiff("multi_aov_2.tiff", units="in", width=7, height=8, res=300)
 multi_plot_2
 dev.off()
