@@ -1,6 +1,6 @@
-########################################
-# Line plots for Machado et al. (2021) #
-########################################
+################################################
+# Data visualization for Machado et al. (2021) #
+################################################
 
 # required packages
 library(plyr)
@@ -8,7 +8,7 @@ library(ggplot2)
 library(ggpubr)
 
 # load file in long format
-df <- read.csv(file="Study Spreadsheet.csv")
+df <- read.csv("https://github.com/artvmac/hrv-coping/blob/main/Study_spreadsheet.csv")
 
 # check data structure
 str(df)
